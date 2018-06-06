@@ -22,6 +22,7 @@ class MainPage extends PureComponent {
   render () {
     const { data: { loading, error, nowPlaying }, loadMorePosts, router } = this.props
     const { movies } = nowPlaying
+    console.log(movies)
 
     return (
       <Main>
@@ -55,9 +56,9 @@ const Title = styled('h1')`
 `
 
 const Container = styled('div')`
-  max-width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  width: 1480px;
+  width: 100%;
 `
 
 const List = styled('div')`
@@ -79,6 +80,7 @@ export const inTheatersMovies = gql`
         overview
         poster_path
         id
+        vote_average
       }
     }
   }

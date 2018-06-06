@@ -25,7 +25,7 @@ const typeDefs = gql`
     title: String
     poster_path: String
     overview: String
-    rating: Int
+    vote_average: Float
   }
 
   type NowPlaying @cacheControl(maxAge: 3600) {

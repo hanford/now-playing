@@ -21,9 +21,9 @@ export default class DocumentComponent extends Document {
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
           <meta name='apple-mobile-web-app-capable' content='yes' />
           <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-          <title>Trends</title>
-          <meta name='name' content='trends' />
-          <meta name='description' content='trends trending' />
+          <title>Now playing</title>
+          <meta name='name' content='Now playing' />
+          <meta name='description' content='Movies currently in theaters' />
           <meta name='mobile-web-app-capable' content='yes' />
         </Head>
 
