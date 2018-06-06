@@ -4,22 +4,15 @@ import styled from 'react-emotion'
 import {withRouter} from 'next/router'
 
 const MoviePage = ({ router: { query: { id } } }) => (
-  <PermaLink>
-    <Wrap>
-      <Movie id={id} />
-    </Wrap>
-  </PermaLink>
+  <PageContainer>
+    <Movie id={id} />
+  </PageContainer>
 )
 
 export default withRouter(MoviePage)
 
-const PermaLink = styled('div')`
-  padding: 100px;
+const PageContainer = styled('div')`
   text-align: center;
-`
-
-const Wrap = styled('div')`
-  display: inline-block;
-  border: 1px solid #999;
-  margin: auto;
+  display: flex;
+  margin-top: 80px;
 `

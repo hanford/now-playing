@@ -12,35 +12,36 @@ export default props => {
   return (
     <Query query={GET_MOVIE} variables={{ id }}>
       {({ loading, error, data }) => (
-          <Motion
-            defaultStyle={{
-              scale: 0,
-              showLoader: 0
-            }}
-            style={{
-              showLoader: spring(loading ? 1 : 0, presets.wobbly),
-              scale: spring(loading ? 0 : 1, presets.wobbly)
-            }}
-          >
-            {({ scale, showLoader }) => {
+        <Motion
+          defaultStyle={{
+            scale: 0,
+            showLoader: 0,
+            opacity: 0
+          }}
+          style={{
+            showLoader: spring(loading ? 1 : 0, presets.stiff),
+            scale: spring(loading ? 0 : 1, presets.stiff),
+            opacity: spring(loading ? 0 : 1)
+          }}
+        >
+          {({ scale, showLoader, opacity, loadingOpacity }) => {
+            if (loading) return <Movie style={{transform: `scale(${showLoader})` }}><Loader>Loading...</Loader></Movie>
 
-              if (loading) return <Movie style={{transform: `scale(${showLoader})`}}><Loader>Loading...</Loader></Movie>
+            const { title, poster_path, overview, rating } = data.movie
 
-              const { title, poster_path, overview, rating } = data.movie
+            return (
+              <Movie style={{transform: `scale(${scale})`, opacity }}>
+                <Image src={`https://image.tmdb.org/t/p/w185_and_h278_bestv2${poster_path}`} />
 
-              return (
-                <Movie style={{transform: `scale(${scale})`}}>
-                  <Image src={`https://image.tmdb.org/t/p/w185_and_h278_bestv2${poster_path}`} />
-
-                  <Sidebar>
-                    <h2>{title}</h2>
-                    <p>{rating}</p>
-                    <p>{overview}</p>
-                  </Sidebar>
-                </Movie>
-              )
-            }}
-          </Motion>
+                <Sidebar>
+                  <h2>{title}</h2>
+                  <p>{rating}</p>
+                  <p>{overview}</p>
+                </Sidebar>
+              </Movie>
+            )
+          }}
+        </Motion>
       )}
     </Query>
   )
@@ -71,10 +72,16 @@ const Movie = styled('div')`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  position: relative;
+
+  @media(max-width: 767px) {
+    height: auto;
+    flex-direction: column;
+  }
 `
 
 const Image = styled('img')`
-  float: left;
+  display: flex;
   max-width: 100%;
   height: 500px;
   background: #333;
@@ -86,7 +93,8 @@ const Image = styled('img')`
 `
 
 const Sidebar = styled('div')`
-  float: right;
+  display: flex;
+  flex-direction: column;
   background: #fff;
   width: 200px;
   height: 500px;
@@ -95,4 +103,7 @@ const Sidebar = styled('div')`
   padding: 20px;
   font-family: Monaco;
   font-size: 11px;
+  @media(max-width: 767px) {
+    height: auto;
+  }
 `
