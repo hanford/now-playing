@@ -14,27 +14,24 @@ export default class MovieComponent extends PureComponent {
 
   render () {
     const { movie, onClick } = this.props
-    console.log(this.state)
 
     return (
       <Motion
-        defaultStyle={{Y: -20, opacity: 0, scale: 0.8, pullUp: 20}}
+        defaultStyle={{Y: -20, opacity: 0, scale: 0.8, pullUp: 20 }}
         style={{
           Y: spring(this.state.expand ? 0 : -20, presets.wobbly),
           opacity: spring(this.state.expand ? 1 : 0),
           scale: spring(this.state.expand ? 1 : 0.8, presets.wobbly),
-          pullUp: spring(this.state.expand ? 0 : 20, presets.wobbly)
+          pullUp: spring(this.state.expand ? 0 : 20, presets.wobbly),
         }}
       >
         {({ Y, opacity, scale, pullUp }) => (
           <Movie
             onMouseEnter={this.setExpand(true)}
             onMouseLeave={this.setExpand(false)}
-            >
-
-              <RatingBackDrop style={{opacity}}/>
-              <Rating style={{transform: `translate3d(0, ${Y}px, 40px) scale(${scale})`, opacity }}>{movie.vote_average}/10</Rating>
-
+          >
+            <RatingBackDrop style={{opacity}}/>
+            <Rating style={{transform: `translate3d(0, ${Y}px, 40px) scale(${scale})`, opacity }}>{movie.vote_average}/10</Rating>
 
             <Poster
               onClick={onClick}
