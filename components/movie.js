@@ -14,15 +14,16 @@ export default class MovieComponent extends PureComponent {
 
   render () {
     const { movie, onClick } = this.props
+    const { expand } = this.state
 
     return (
       <Motion
         defaultStyle={{Y: -20, opacity: 0, scale: 0.8, pullUp: 20 }}
         style={{
-          Y: spring(this.state.expand ? 0 : -20, presets.wobbly),
-          opacity: spring(this.state.expand ? 1 : 0),
-          scale: spring(this.state.expand ? 1 : 0.8, presets.wobbly),
-          pullUp: spring(this.state.expand ? 0 : 20, presets.wobbly),
+          Y: spring(expand ? 0 : -20, presets.wobbly),
+          opacity: spring(expand ? 1 : 0),
+          scale: spring(expand ? 1 : 0.8, presets.wobbly),
+          pullUp: spring(expand ? 0 : 20, presets.wobbly),
         }}
       >
         {({ Y, opacity, scale, pullUp }) => (

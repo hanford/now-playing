@@ -22,7 +22,6 @@ class MainPage extends PureComponent {
   render () {
     const { data: { loading, error, nowPlaying }, loadMorePosts, router } = this.props
     const { movies } = nowPlaying
-    console.log(movies)
 
     return (
       <Main>
