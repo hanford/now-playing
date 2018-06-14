@@ -13,7 +13,6 @@ const typeDefs = gql`
   type Query @cacheControl(maxAge: 3600) {
     movies(query: String!): [Movie]
     nowPlaying: NowPlaying
-    config: Config
     movie(id: Int!): Movie
   }
 
@@ -34,10 +33,6 @@ const typeDefs = gql`
     base_url: String
     secure_base_url: String
   }
-
-  type Config @cacheControl(maxAge: 3600) {
-    images: Images
-  }
 `
 
 // https://dev-blog.apollodata.com/tutorial-building-a-graphql-server-cddaa023c035
@@ -56,11 +51,6 @@ const resolvers = {
       return fetch(`${TMDB_API_PATH}/movie/now_playing?api_key=${context.secrets.TMDB_API_KEY}`)
         .then(res => res.json())
         .then(({ results }) => ({ movies: results }))
-    },
-    config (_, $, context) {
-      return fetch(
-        `${TMDB_API_PATH}/configuration?api_key=${context.secrets.TMDB_API_KEY}`
-      ).then(res => res.json())
     },
     movie (root, args, context) {
       return fetch(

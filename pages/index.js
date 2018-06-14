@@ -1,13 +1,18 @@
 import styled from 'react-emotion'
 import { PureComponent } from 'react'
-import { graphql } from 'react-apollo'
+import { graphql, ApolloConsumer } from 'react-apollo'
 import gql from 'graphql-tag'
 import Router, { withRouter } from 'next/router'
+import FlipMove from 'react-flip-move'
 
 import Modal from '../components/modal'
 import Movie from '../components/movie'
 
 class MainPage extends PureComponent {
+  state = {
+    search: '',
+    movies: []
+  }
 
   dismissModal () {
     Router.push('/')
@@ -19,9 +24,26 @@ class MainPage extends PureComponent {
     Router.push(`/?movieId=${id}`, `/movie?id=${id}`)
   }
 
+  onSearchChange = client => async event => {
+    console.log(client)
+    const { value } = event.target
+
+    this.setState({ search: value })
+
+    const { data } = await client.query({
+      query: SEARCH_MOVIES,
+      variables: { query: value }
+    })
+
+    if (data.movies) {
+      this.setState({ movies: data.movies })
+    }
+  }
+
   render () {
-    const { data: { loading, error, nowPlaying }, loadMorePosts, router } = this.props
+    const { data: { loading, error, nowPlaying }, router } = this.props
     const { movies } = nowPlaying
+    const { movies: searchMovies } = this.state
 
     return (
       <Main>
@@ -30,13 +52,21 @@ class MainPage extends PureComponent {
         }
 
         <Container>
-          <Title>Now Playing</Title>
+          <Navbar>
+            <Title>{this.state.search.length === 0 ? 'Now Playing' : 'Searching'}</Title>
+
+            <ApolloConsumer>
+              {client => (
+                <Input type='search' placeholder='Search' onChange={this.onSearchChange(client)}/>
+              )}
+            </ApolloConsumer>
+          </Navbar>
 
           <List>
             {
-              movies
-                .filter((id) => (id !== router.query.movieId))
-                .map(movie => <Movie onClick={(e) => this.showMovie(e, movie.id)} movie={movie} key={movie.id} />)
+              this.state.search !== ''
+              ? searchMovies.map(movie => <Movie onClick={(e) => this.showMovie(e, movie.id)} movie={movie} key={movie.id} />)
+              : movies.map(movie => <Movie onClick={(e) => this.showMovie(e, movie.id)} movie={movie} key={movie.id} />)
             }
           </List>
         </Container>
@@ -63,7 +93,7 @@ const Container = styled('div')`
 const List = styled('div')`
   display: grid;
   margin: 0 auto;
-  grid-template-columns: repeat(auto-fill, 180px);
+  grid-template-columns: repeat(auto-fill, 183px);
   grid-gap: 20px;
 
   @media(max-width: 787px) {
@@ -71,8 +101,22 @@ const List = styled('div')`
   }
 `
 
-export const inTheatersMovies = gql`
-  query {
+const Navbar = styled('div')`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const Input = styled('input')`
+  padding: 12px;
+  font-size: 16px;
+  outline: none;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 60px;
+`
+
+const inTheatersMovies = gql`
+  query getInTheaters {
     nowPlaying {
       movies {
         title
@@ -81,6 +125,18 @@ export const inTheatersMovies = gql`
         id
         vote_average
       }
+    }
+  }
+`
+
+const SEARCH_MOVIES = gql`
+  query movie ($query: String!) {
+    movies (query: $query) {
+      title
+      overview
+      poster_path
+      id
+      vote_average
     }
   }
 `
@@ -94,7 +150,6 @@ export default graphql(inTheatersMovies, {
     }
   }
 })(hasRouter)
-
 
 // loadMorePosts: () => {
 //   return data.fetchMore({

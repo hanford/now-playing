@@ -27,7 +27,7 @@ export default props => {
           {({ scale, showLoader, opacity, loadingOpacity }) => {
             if (loading) return <Movie style={{transform: `scale(${showLoader})` }}><Loader>Loading...</Loader></Movie>
 
-            const { title, poster_path, overview, rating } = data.movie
+            const { title, poster_path, overview, vote_average } = data.movie
 
             return (
               <Movie style={{transform: `scale(${scale})`, opacity }}>
@@ -35,7 +35,7 @@ export default props => {
 
                 <Sidebar>
                   <h2>{title}</h2>
-                  <p>{rating}</p>
+                  <p>{vote_average}/10</p>
                   <p>{overview}</p>
                 </Sidebar>
               </Movie>
@@ -53,6 +53,7 @@ const GET_MOVIE = gql`
       title
       overview
       poster_path
+      vote_average
       id
     }
   }
@@ -101,8 +102,9 @@ const Sidebar = styled('div')`
   text-align: left;
   box-sizing: border-box;
   padding: 20px;
-  font-family: Monaco;
-  font-size: 11px;
+  font-family: Arial;
+  font-size: 12px;
+
   @media(max-width: 767px) {
     height: auto;
   }
