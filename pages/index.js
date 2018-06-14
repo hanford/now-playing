@@ -3,7 +3,6 @@ import { PureComponent } from 'react'
 import { graphql, ApolloConsumer } from 'react-apollo'
 import gql from 'graphql-tag'
 import Router, { withRouter } from 'next/router'
-import FlipMove from 'react-flip-move'
 
 import Modal from '../components/modal'
 import Movie from '../components/movie'
